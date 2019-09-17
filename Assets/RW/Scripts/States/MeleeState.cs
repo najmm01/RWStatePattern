@@ -16,6 +16,9 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         private bool changeWeapon;
         private float restTime;
         private float restThreshold;
+        private int swingParam = Animator.StringToHash("SwingMelee");
+        private int drawParam = Animator.StringToHash("DrawMelee");
+        private int sheathParam = Animator.StringToHash("SheathMelee");
 
         public MeleeState(Character character) : base(character) { }
 
@@ -35,7 +38,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public override void HandleInput()
         {
-            swingWeapon = Input.GetButton("Fire1");
+            swingWeapon = Input.GetButtonDown("Fire1");
             changeWeapon = Input.GetButtonDown("Fire2");
         }
 
@@ -48,20 +51,13 @@ namespace RayWenderlich.Unity.StatePatternInUnity
                     {
                         subState = MeleeSubState.Rested;
                         character.DeactivateHitBox();
-                        restTime = 0;
+                        restTime = 0;                        
                     }
-                    else
-                    {
-                        //swing
-                    }
-
                     break;
                 case MeleeSubState.Rested:
                     if (swingWeapon)
                     {
-                        subState = MeleeSubState.Swinging;
-                        character.Equip();
-                        character.ActivateHitBox();
+                        ChangeSubStateToSwing();
                     }
                     else
                     {
@@ -69,6 +65,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
                         if (restTime > restThreshold)
                         {                            
                             subState = MeleeSubState.Sheathed;
+                            character.TriggerAnimation(sheathParam);
                             character.SheathWeapon();
                             restTime = 0;
                         }
@@ -78,9 +75,8 @@ namespace RayWenderlich.Unity.StatePatternInUnity
                 case MeleeSubState.Sheathed:
                     if (swingWeapon)
                     {
-                        subState = MeleeSubState.Swinging;
-                        character.Equip();
-                        character.ActivateHitBox();
+                        character.TriggerAnimation(drawParam);
+                        ChangeSubStateToSwing();
                     }
 
                     break;
@@ -95,6 +91,14 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         public override void PhysicsUpdate()
         {
             return;
+        }
+
+        private void ChangeSubStateToSwing()
+        {
+            subState = MeleeSubState.Swinging;
+            character.TriggerAnimation(swingParam);
+            character.Equip();
+            character.ActivateHitBox();
         }
     }
 }

@@ -54,6 +54,8 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         [SerializeField]
         private Transform sheathTransform;
         [SerializeField]
+        private Transform shootTransform;
+        [SerializeField]
         private CharacterData data;
         [SerializeField]
         private LayerMask whatIsGround;
@@ -73,6 +75,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         private int horizonalMoveParam = Animator.StringToHash("H_Speed");
         private int verticalMoveParam = Animator.StringToHash("V_Speed");
         private int crouchParam = Animator.StringToHash("Crouch");
+        private int shootParam = Animator.StringToHash("Shoot");
         #endregion
 
         #region Properties
@@ -147,7 +150,9 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public void Shoot()
         {
-            Instantiate(data.shootableObject, handTransform.transform.position, handTransform.transform.rotation);
+            TriggerAnimation(shootParam);
+            var shootable = Instantiate(data.shootableObject, shootTransform.position, shootTransform.rotation);
+            shootable.GetComponent<Rigidbody>().velocity = shootable.transform.forward * data.bulletInitialSpeed;
         }
 
         public bool CheckCollisionOverlap(Vector3 point)
@@ -159,7 +164,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         {
             if (weapon != null)
             {
-                currentWeapon = Instantiate(weapon, handTransform, false);
+                currentWeapon = Instantiate(weapon, handTransform.position, handTransform.rotation, handTransform);
             }
             else
             {
@@ -189,7 +194,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         private void ParentCurrentWeapon(Transform parent)
         {
-            currentWeapon.transform.SetParent(sheathTransform);
+            currentWeapon.transform.SetParent(parent);
             currentWeapon.transform.localPosition = Vector3.zero;
             currentWeapon.transform.localRotation = Quaternion.identity;
         }

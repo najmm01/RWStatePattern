@@ -44,7 +44,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-            belowCeiling = character.CheckCollisionOverlap(character.transform.position + Vector3.up * character.CrouchColliderHeight);
+            belowCeiling = character.CheckCollisionOverlap(character.transform.position + Vector3.up * character.NormalColliderHeight);
         }
     }
 }

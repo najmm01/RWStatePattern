@@ -16,18 +16,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!75 &936380797
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2768739269174503269}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 10}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!135 &936380796
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -36,7 +24,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2768739269174503269}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.1
@@ -64,7 +52,7 @@ PrefabInstance:
     - target: {fileID: 769332345581668377, guid: 2f5aa1f129461c646be7008dc8268e05,
         type: 3}
       propertyPath: m_Name
-      value: StaticFireBall
+      value: FireBall
       objectReference: {fileID: 0}
     - target: {fileID: 769332345581668376, guid: 2f5aa1f129461c646be7008dc8268e05,
         type: 3}

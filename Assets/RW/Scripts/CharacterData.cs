@@ -14,4 +14,5 @@ public class CharacterData : ScriptableObject
     public float crouchRotationSpeed = 30f;
     public float jumpForce = 10f;
     public float diveForce = 30f;
+    public float bulletInitialSpeed = 10f;
 }
