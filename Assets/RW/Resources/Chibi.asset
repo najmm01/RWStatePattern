@@ -27,3 +27,4 @@ MonoBehaviour:
   jumpForce: 10
   diveForce: 30
   bulletInitialSpeed: 20
+  diveCooldownTimer: 2.5

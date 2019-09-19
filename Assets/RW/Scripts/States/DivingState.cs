@@ -2,16 +2,25 @@
 
 namespace RayWenderlich.Unity.StatePatternInUnity
 {
+    enum DiveSubState
+    {
+        InAir,
+        Grounded,
+        CoolDown
+    }
+
     public class DivingState : State
     {
-        private bool grounded;
+        private float cooldownTimer;
+        private DiveSubState subState;
         private int hardLanding = Animator.StringToHash("HardLand");
 
         public DivingState(Character character) : base(character) { }
 
         public override void Enter()
         {
-            grounded = false;
+            cooldownTimer = 0f;
+            subState = DiveSubState.InAir;
             character.ApplyImpulse(Vector3.down * character.DiveForce);
         }
 
@@ -27,16 +36,33 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public override void LogicUpdate()
         {
-            if (grounded)
+            switch (subState)
             {
-                character.TriggerAnimation(hardLanding);
-                RemoveState(character.movementStates);
+                case DiveSubState.Grounded:
+                    character.TriggerAnimation(hardLanding);
+                    character.PlayShockwaveFX();
+                    subState = DiveSubState.CoolDown;
+                    break;
+                case DiveSubState.CoolDown:
+                    if (cooldownTimer >= character.DiveCooldownTimer)
+                    {
+                        RemoveState(character.movementStates);
+                    }
+                    else
+                    {
+                        character.RestrictRotation();
+                        cooldownTimer += Time.deltaTime;
+                    }
+                    break;
             }
         }
 
         public override void PhysicsUpdate()
         {
-            grounded = character.CheckCollisionOverlap(character.transform.position);
+            if (subState == DiveSubState.InAir && character.CheckCollisionOverlap(character.transform.position))
+            {
+                subState = DiveSubState.Grounded;
+            }
         }
     }
 }

@@ -28,7 +28,6 @@
  * THE SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -63,6 +62,8 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         private Collider hitBox;
         [SerializeField]
         private Animator anim;
+        [SerializeField]
+        private ParticleSystem shockWave;
 #pragma warning restore 0649
         [SerializeField]
         private float meleeRestThreshold = 10f;
@@ -90,6 +91,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         public float CrouchRotationSpeed => data.crouchRotationSpeed;
         public GameObject MeleeWeapon => data.meleeWeapon;
         public GameObject ShootableWeapon => data.staticShootable;
+        public float DiveCooldownTimer => data.diveCooldownTimer;
         public float CollisionOverlapRadius => collisionOverlapRadius;
         public float DiveThreshold => diveThreshold;
         public float MeleeRestThreshold => meleeRestThreshold;
@@ -133,6 +135,12 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             anim.SetFloat(verticalMoveParam, speed * Time.deltaTime);
         }
 
+        public void ResetMoveParams()
+        {
+            anim.SetFloat(horizonalMoveParam, 0f);
+            anim.SetFloat(verticalMoveParam, 0f);
+        }
+
         public void ApplyImpulse(Vector3 force)
         {
             GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
@@ -170,6 +178,11 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             {
                 ParentCurrentWeapon(handTransform);
             }
+        }
+
+        public void PlayShockwaveFX()
+        {
+            shockWave.Play();
         }
 
         public void SheathWeapon()

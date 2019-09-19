@@ -19,6 +19,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public override void Exit()
         {
+            character.ResetMoveParams();
             return;
         }
 
