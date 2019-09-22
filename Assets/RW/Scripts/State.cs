@@ -48,18 +48,17 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         public abstract void PhysicsUpdate();
         public abstract void Exit();
 
-        public static void ChangeState(State state, Stack<State> linkedStack)
+        public static void ChangeState(State newState, Stack<State> linkedStack)
         {
-
             if (linkedStack.Count > 0)
             {
                 linkedStack.Peek().Exit();
             }
 
-            linkedStack.Push(state);
-            state.Enter();
+            linkedStack.Push(newState);
+            newState.Enter();
 
-            Debug.Log(state + " state entered");
+            Debug.Log(newState + " state entered");
         }
 
         public static void RemoveState(Stack<State> linkedStack)
@@ -80,7 +79,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             Debug.Log(linkedStack.Peek() + " state entered");
         }
 
-        public static void RemoveOldAndChangeState(State stateToPush, Stack<State> linkedStack)
+        public static void RemoveOldAndChangeState(State newState, Stack<State> linkedStack)
         {
             if (linkedStack.Count == 0)
             {
@@ -90,10 +89,10 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             linkedStack.Peek().Exit();
             linkedStack.Pop();
 
-            linkedStack.Push(stateToPush);
-            stateToPush.Enter();
+            linkedStack.Push(newState);
+            newState.Enter();
 
-            Debug.Log(stateToPush + " state entered");
+            Debug.Log(newState + " state entered");
         }
     }
 }

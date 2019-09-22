@@ -1,4 +1,34 @@
-﻿using UnityEngine;
+﻿/*
+ * Copyright (c) 2019 Razeware LLC
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * Notwithstanding the foregoing, you may not use, copy, modify, merge, publish, 
+ * distribute, sublicense, create a derivative work, and/or sell copies of the 
+ * Software in any work that is designed, intended, or marketed for pedagogical or 
+ * instructional purposes related to programming, coding, application development, 
+ * or information technology.  Permission for such use, copying, modification,
+ * merger, publication, distribution, sublicensing, creation of derivative works, 
+ * or sale is expressly withheld.
+ *    
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+using UnityEngine;
 
 namespace RayWenderlich.Unity.StatePatternInUnity
 {
@@ -24,15 +54,18 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public override void Enter()
         {
+            character.SetAnimationBool(character.isMelee, true);
             restThreshold = character.MeleeRestThreshold;
             restTime = 0f;
             swingWeapon = changeWeapon = false;
+            
+            DrawWeapon(character.MeleeWeapon);
             subState = MeleeSubState.Rested;
-            character.Equip(character.MeleeWeapon);
         }
 
         public override void Exit()
         {
+            character.SetAnimationBool(character.isMelee, false);
             character.Unequip();
         }
 
@@ -47,27 +80,32 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             switch (subState)
             {
                 case MeleeSubState.Swinging:
+                    SwingWeapon();
+
                     if (!swingWeapon)
                     {
-                        subState = MeleeSubState.Rested;
                         character.DeactivateHitBox();
-                        restTime = 0;                        
+                        subState = MeleeSubState.Rested;
                     }
+
                     break;
                 case MeleeSubState.Rested:
                     if (swingWeapon)
                     {
-                        ChangeSubStateToSwing();
+                        restTime = 0f;
+
+                        character.ActivateHitBox();
+                        subState = MeleeSubState.Swinging;
                     }
                     else
                     {
                         restTime += Time.deltaTime;
                         if (restTime > restThreshold)
-                        {                            
+                        {
+                            restTime = 0f;
+
+                            SheathWeapon();
                             subState = MeleeSubState.Sheathed;
-                            character.TriggerAnimation(sheathParam);
-                            character.SheathWeapon();
-                            restTime = 0;
                         }
                     }
 
@@ -75,8 +113,10 @@ namespace RayWenderlich.Unity.StatePatternInUnity
                 case MeleeSubState.Sheathed:
                     if (swingWeapon)
                     {
-                        character.TriggerAnimation(drawParam);
-                        ChangeSubStateToSwing();
+                        DrawWeapon();
+
+                        character.ActivateHitBox();
+                        subState = MeleeSubState.Swinging;
                     }
 
                     break;
@@ -93,12 +133,24 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             return;
         }
 
-        private void ChangeSubStateToSwing()
+        private void SwingWeapon()
         {
-            subState = MeleeSubState.Swinging;
+            SoundManager.Instance.PlaySound(SoundManager.Instance.meleeSwings);
             character.TriggerAnimation(swingParam);
-            character.Equip();
-            character.ActivateHitBox();
+        }
+
+        private void SheathWeapon()
+        {
+            SoundManager.Instance.PlaySound(SoundManager.Instance.meleeSheath);
+            character.TriggerAnimation(sheathParam);
+            character.SheathWeapon();
+        }
+
+        private void DrawWeapon(GameObject weapon = null)
+        {
+            SoundManager.Instance.PlaySound(SoundManager.Instance.meleeEquip);
+            character.TriggerAnimation(drawParam);
+            character.Equip(weapon);
         }
     }
 }

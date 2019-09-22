@@ -73,9 +73,9 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         private float collisionOverlapRadius = 0.1f;
 
         private GameObject currentWeapon;
+        private Quaternion currentRotation;
         private int horizonalMoveParam = Animator.StringToHash("H_Speed");
         private int verticalMoveParam = Animator.StringToHash("V_Speed");
-        private int crouchParam = Animator.StringToHash("Crouch");
         private int shootParam = Animator.StringToHash("Shoot");
         #endregion
 
@@ -95,6 +95,8 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         public float CollisionOverlapRadius => collisionOverlapRadius;
         public float DiveThreshold => diveThreshold;
         public float MeleeRestThreshold => meleeRestThreshold;
+        public int isMelee => Animator.StringToHash("IsMelee");
+        public int crouchParam => Animator.StringToHash("Crouch");
 
         public float ColliderSize
         {
@@ -118,7 +120,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public void RestrictRotation()
         {
-            var currentRotation = transform.rotation;
+            currentRotation = transform.rotation;
             currentRotation.x = currentRotation.z = 0f;
             transform.rotation = currentRotation;
         }
@@ -131,12 +133,18 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
             GetComponent<Rigidbody>().angularVelocity = rotationSpeed * Vector3.up * Time.deltaTime;
 
+            if(targetVelocity.magnitude > 0.01f || GetComponent<Rigidbody>().angularVelocity.magnitude > 0.01f)
+            {
+                SoundManager.Instance.PlayFootSteps();
+            }
+            
             anim.SetFloat(horizonalMoveParam, GetComponent<Rigidbody>().angularVelocity.y);
             anim.SetFloat(verticalMoveParam, speed * Time.deltaTime);
         }
 
         public void ResetMoveParams()
         {
+            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             anim.SetFloat(horizonalMoveParam, 0f);
             anim.SetFloat(verticalMoveParam, 0f);
         }
@@ -146,9 +154,9 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             GetComponent<Rigidbody>().AddForce(force, ForceMode.Impulse);
         }
 
-        public void SetCrouchAnimation(bool value)
+        public void SetAnimationBool(int param, bool value)
         {
-            anim.SetBool(crouchParam, value);
+            anim.SetBool(param, value);
         }
 
         public void TriggerAnimation(int param)
@@ -161,6 +169,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             TriggerAnimation(shootParam);
             var shootable = Instantiate(data.shootableObject, shootTransform.position, shootTransform.rotation);
             shootable.GetComponent<Rigidbody>().velocity = shootable.transform.forward * data.bulletInitialSpeed;
+            SoundManager.Instance.PlaySound(SoundManager.Instance.shoot, true);
         }
 
         public bool CheckCollisionOverlap(Vector3 point)
@@ -182,6 +191,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public void PlayShockwaveFX()
         {
+            SoundManager.Instance.PlaySound(SoundManager.Instance.hardLanding);
             shockWave.Play();
         }
 
@@ -207,6 +217,11 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         private void ParentCurrentWeapon(Transform parent)
         {
+            if (currentWeapon.transform.parent == parent)
+            {
+                return;
+            }
+
             currentWeapon.transform.SetParent(parent);
             currentWeapon.transform.localPosition = Vector3.zero;
             currentWeapon.transform.localRotation = Quaternion.identity;

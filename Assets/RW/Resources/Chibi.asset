@@ -22,9 +22,9 @@ MonoBehaviour:
   crouchSpeed: 100
   crouchColliderHeight: 2.5
   normalColliderHeight: 3
-  rotationSpeed: 80
+  rotationSpeed: 180
   crouchRotationSpeed: 40
   jumpForce: 10
   diveForce: 30
   bulletInitialSpeed: 20
-  diveCooldownTimer: 2.5
+  diveCooldownTimer: 2.1

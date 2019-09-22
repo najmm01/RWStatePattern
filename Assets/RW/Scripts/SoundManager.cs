@@ -32,46 +32,70 @@ using UnityEngine;
 
 namespace RayWenderlich.Unity.StatePatternInUnity
 {
-    public class ShootingState : State
+    public class SoundManager : MonoBehaviour
     {
-        bool shoot;
-        bool changeWeapon;
+        public AudioClip[] jumpSounds;
+        public AudioClip[] footStepsArray;
+        public AudioClip landing;
+        public AudioClip diveBuildup;
+        public AudioClip hardLanding;
+        public AudioClip shootableEquip;
+        public AudioClip shoot;
+        public AudioClip[] meleeSwings;
+        public AudioClip meleeEquip;
+        public AudioClip meleeSheath;
+        public AudioClip click;
+        public AudioClip select;
 
-        public ShootingState(Character character) : base(character) { }
+        public static SoundManager Instance;
 
-        public override void Enter()
+        [SerializeField]
+        private AudioSource audioSource = null;
+        [SerializeField]
+        private AudioSource footStepsAudio = null;
+        [SerializeField]
+        private float minPitch = 0f;
+        [SerializeField]
+        private float maxPitch = 0f;
+
+        private float defaultPitch;
+
+        private void Awake()
         {
-            SoundManager.Instance.PlaySound(SoundManager.Instance.shootableEquip);
-            shoot = changeWeapon = false;
-            character.Equip(character.ShootableWeapon);
-        }
-
-        public override void Exit()
-        {
-            character.Unequip();
-        }
-
-        public override void HandleInput()
-        {
-            shoot = Input.GetButtonDown("Fire1");
-            changeWeapon = Input.GetButtonDown("Fire2");
-        }
-
-        public override void LogicUpdate()
-        {
-            if (changeWeapon)
+            if (Instance == null)
             {
-                RemoveState(character.equipmentStates);
+                Instance = this;
             }
-            else if (shoot)
+            else if (Instance != this)
             {
-                character.Shoot();
+                Destroy(gameObject);
+            }
+
+            defaultPitch = audioSource.pitch;
+        }
+
+        public void StopPlaying()
+        {
+            audioSource.Stop();
+        }
+
+        public void PlaySound(AudioClip[] array)
+        {
+            audioSource.PlayOneShot(array[Random.Range(0, array.Length)]);
+        }
+
+        public void PlayFootSteps()
+        {
+            if(!footStepsAudio.isPlaying)
+            {
+                footStepsAudio.PlayOneShot(footStepsArray[Random.Range(0, footStepsArray.Length)]);
             }
         }
 
-        public override void PhysicsUpdate()
+        public void PlaySound(AudioClip clip, bool randomPitch = false)
         {
-            return;
+            audioSource.pitch = randomPitch ? Random.Range(minPitch, maxPitch) : defaultPitch;
+            audioSource.PlayOneShot(clip);
         }
     }
 }
