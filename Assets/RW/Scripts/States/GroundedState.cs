@@ -44,6 +44,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public override void Enter()
         {
+            DisplayOnUI(UIManager.Alignment.Left);
             horizontalInput = verticalInput = 0.0f;
         }
 

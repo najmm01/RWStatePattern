@@ -49,6 +49,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public override void Enter()
         {
+            DisplayOnUI(UIManager.Alignment.Left);
             cooldownTimer = 0f;
             subState = DiveSubState.InAir;
             character.ApplyImpulse(Vector3.down * character.DiveForce);

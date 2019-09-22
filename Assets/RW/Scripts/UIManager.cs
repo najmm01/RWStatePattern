@@ -28,70 +28,54 @@
  * THE SOFTWARE.
  */
 
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RayWenderlich.Unity.StatePatternInUnity
 {
-    public abstract class State
+    public class UIManager : MonoBehaviour
     {
-        protected Character character;
-
-        public State(Character character)
+        public enum Alignment
         {
-            this.character = character;
+            Left,
+            Right
         }
 
-        public abstract void Enter();
-        public abstract void HandleInput();
-        public abstract void LogicUpdate();
-        public abstract void PhysicsUpdate();
-        public abstract void Exit();
+        public static UIManager Instance;
 
-        public static void ChangeState(State newState, Stack<State> linkedStack)
+        [SerializeField]
+        private Text leftText = null;
+        [SerializeField]
+        private Text rightText = null;
+        [SerializeField]
+        private string textToTrim = null;
+
+        private void Awake()
         {
-            if (linkedStack.Count > 0)
+            if (Instance == null)
             {
-                linkedStack.Peek().Exit();
+                Instance = this;
             }
-
-            linkedStack.Push(newState);
-            newState.Enter();
-        }
-
-        public static void RemoveState(Stack<State> linkedStack)
-        {
-            if (linkedStack.Count == 0)
+            else if (Instance != this)
             {
-                return;
-            }
-
-            linkedStack.Peek().Exit();
-            linkedStack.Pop();
-
-            if (linkedStack.Count > 0)
-            {
-                linkedStack.Peek().Enter();
+                Destroy(gameObject);
             }
         }
 
-        public static void RemoveOldAndChangeState(State newState, Stack<State> linkedStack)
+        public void Display(State enteredState, Alignment alignment)
         {
-            if (linkedStack.Count == 0)
+            var name = enteredState.ToString();
+            name = name.Remove(name.IndexOf(textToTrim), textToTrim.Length);
+            name = name.Remove(name.IndexOf("State"), 5);
+
+            if (alignment == Alignment.Left)
             {
-                return;
+                leftText.text = name;
             }
-
-            linkedStack.Peek().Exit();
-            linkedStack.Pop();
-
-            linkedStack.Push(newState);
-            newState.Enter();
-        }
-
-        protected void DisplayOnUI(UIManager.Alignment alignment)
-        {
-            UIManager.Instance.Display(this, alignment);
+            else
+            {
+                rightText.text = name;
+            }
         }
     }
 }

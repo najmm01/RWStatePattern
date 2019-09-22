@@ -35,7 +35,8 @@ namespace RayWenderlich.Unity.StatePatternInUnity
     public class SoundManager : MonoBehaviour
     {
         public AudioClip[] jumpSounds;
-        public AudioClip[] footStepsArray;
+        public AudioClip[] rightFootSteps;
+        public AudioClip[] leftFootSteps;
         public AudioClip landing;
         public AudioClip diveBuildup;
         public AudioClip hardLanding;
@@ -56,9 +57,17 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         [SerializeField]
         private float minPitch = 0f;
         [SerializeField]
-        private float maxPitch = 0f;
+        private float maxPitch = 1f;
+        [SerializeField]
+        private float maxSpeed = 200f;
+        [SerializeField]
+        private float minVolume = 0.05f;
+        [SerializeField]
+        private float maxFootstepVolume = 0.1f;
 
         private float defaultPitch;
+        private bool rightStep;
+        private AudioClip footStepSfx;
 
         private void Awake()
         {
@@ -84,12 +93,25 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             audioSource.PlayOneShot(array[Random.Range(0, array.Length)]);
         }
 
-        public void PlayFootSteps()
+        public void PlayFootSteps(float speed)
         {
-            if(!footStepsAudio.isPlaying)
+            footStepsAudio.pitch = Mathf.Max(speed / maxSpeed, minPitch);
+            if (footStepsAudio.isPlaying)
             {
-                footStepsAudio.PlayOneShot(footStepsArray[Random.Range(0, footStepsArray.Length)]);
+                return;
             }
+
+            if (rightStep)
+            {
+                footStepSfx = rightFootSteps[Random.Range(0, rightFootSteps.Length)];
+                rightStep = false;
+            }
+            else
+            {
+                footStepSfx = leftFootSteps[Random.Range(0, leftFootSteps.Length)];
+                rightStep = true;
+            }
+            footStepsAudio.PlayOneShot(footStepSfx, Mathf.Max(maxFootstepVolume * speed / maxSpeed, minVolume));
         }
 
         public void PlaySound(AudioClip clip, bool randomPitch = false)

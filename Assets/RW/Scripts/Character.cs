@@ -133,11 +133,11 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
             GetComponent<Rigidbody>().angularVelocity = rotationSpeed * Vector3.up * Time.deltaTime;
 
-            if(targetVelocity.magnitude > 0.01f || GetComponent<Rigidbody>().angularVelocity.magnitude > 0.01f)
+            if (targetVelocity.magnitude > 0.01f || GetComponent<Rigidbody>().angularVelocity.magnitude > 0.01f)
             {
-                SoundManager.Instance.PlayFootSteps();
+                SoundManager.Instance.PlayFootSteps(Mathf.Abs(speed));
             }
-            
+
             anim.SetFloat(horizonalMoveParam, GetComponent<Rigidbody>().angularVelocity.y);
             anim.SetFloat(verticalMoveParam, speed * Time.deltaTime);
         }

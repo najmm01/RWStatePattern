@@ -41,6 +41,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public override void Enter()
         {
+            DisplayOnUI(UIManager.Alignment.Right);
             SoundManager.Instance.PlaySound(SoundManager.Instance.shootableEquip);
             shoot = changeWeapon = false;
             character.Equip(character.ShootableWeapon);

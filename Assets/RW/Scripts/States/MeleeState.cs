@@ -54,6 +54,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public override void Enter()
         {
+            DisplayOnUI(UIManager.Alignment.Right);
             character.SetAnimationBool(character.isMelee, true);
             restThreshold = character.MeleeRestThreshold;
             restTime = 0f;

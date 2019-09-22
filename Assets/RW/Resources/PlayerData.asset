@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65ab2b639f4ff314a962ad5a94ab058a, type: 3}
-  m_Name: Chibi
+  m_Name: PlayerData
   m_EditorClassIdentifier: 
   shootableObject: {fileID: 2768739269174503269, guid: 11b562f6cb866a24fbdc86cee0323f77,
     type: 3}

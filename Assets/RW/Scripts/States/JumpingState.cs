@@ -43,6 +43,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         public override void Enter()
         {
+            DisplayOnUI(UIManager.Alignment.Left);
             SoundManager.Instance.PlaySound(SoundManager.Instance.jumpSounds);
             grounded = false;
             holdTime = 0;
