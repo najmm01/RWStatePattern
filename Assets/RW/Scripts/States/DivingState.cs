@@ -32,19 +32,22 @@ using UnityEngine;
 
 namespace RayWenderlich.Unity.StatePatternInUnity
 {
-    enum DiveSubState
-    {
-        InAir,
-        Grounded,
-        CoolDown
-    }
-
     public class DivingState : State
     {
+        //1
+        private enum DiveSubState
+        {
+            InAir,
+            Grounded,
+            CoolDown
+        }
+
         private float cooldownTimer;
+        //2
         private DiveSubState subState;
         private int hardLanding = Animator.StringToHash("HardLand");
-
+        
+        //3
         public DivingState(Character character) : base(character) { }
 
         public override void Enter()

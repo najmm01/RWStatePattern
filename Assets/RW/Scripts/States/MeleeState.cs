@@ -34,6 +34,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 {
     public class MeleeState : State
     {
+        //1
         private enum MeleeSubState
         {
             Swinging,
@@ -50,6 +51,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         private int drawParam = Animator.StringToHash("DrawMelee");
         private int sheathParam = Animator.StringToHash("SheathMelee");
 
+        //2
         public MeleeState(Character character) : base(character) { }
 
         public override void Enter()

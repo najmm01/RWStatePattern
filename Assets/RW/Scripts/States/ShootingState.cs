@@ -34,8 +34,8 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 {
     public class ShootingState : State
     {
-        bool shoot;
-        bool changeWeapon;
+        private bool shoot;
+        private bool changeWeapon;
 
         public ShootingState(Character character) : base(character) { }
 

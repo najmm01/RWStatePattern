@@ -38,6 +38,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
     {
         #region Variables
 
+        //1
         public StandingState standing;
         public DuckingState ducking;
         public JumpingState jumping;
@@ -232,6 +233,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         private void Start()
         {
+            //2
             standing = new StandingState(this);
             ducking = new DuckingState(this);
             jumping = new JumpingState(this);
@@ -239,6 +241,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             shooting = new ShootingState(this);
             melee = new MeleeState(this);
 
+            //3
             State.ChangeState(standing, movementStates);
             State.ChangeState(melee, equipmentStates);
         }
