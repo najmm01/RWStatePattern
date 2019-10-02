@@ -28,7 +28,6 @@
  * THE SOFTWARE.
  */
 
-using System.Collections;
 using UnityEngine;
 
 public class DestroyAfterAWhile : MonoBehaviour
@@ -37,12 +36,6 @@ public class DestroyAfterAWhile : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SelfDestruct());
-    }
-
-    IEnumerator SelfDestruct()
-    {
-        yield return new WaitForSeconds(lifeTime);
-        Destroy(gameObject);
+        Destroy(gameObject, lifeTime);
     }
 }

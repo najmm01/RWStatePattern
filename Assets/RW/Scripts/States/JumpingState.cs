@@ -61,21 +61,17 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         {
             if (Input.GetAxis("Vertical") < 0)
             {
-                if(holdTime == 0)
+                if (holdTime == 0)
                 {
                     SoundManager.Instance.PlaySound(SoundManager.Instance.diveBuildup);
                 }
 
                 holdTime += Time.deltaTime;
             }
-
-            if (Input.GetAxis("Vertical") == 0)
+            else if (holdTime > 0f)
             {
-                if (holdTime > 0f)
-                {
-                    SoundManager.Instance.StopPlaying();
-                    holdTime = 0;
-                }
+                SoundManager.Instance.StopPlaying();
+                holdTime = 0;
             }
         }
 
