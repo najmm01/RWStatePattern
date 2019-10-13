@@ -47,9 +47,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             SoundManager.Instance.PlaySound(SoundManager.Instance.jumpSounds);
             grounded = false;
             holdTime = 0;
-            character.transform.Translate(Vector3.up * (character.CollisionOverlapRadius + 0.1f));
-            character.ApplyImpulse(Vector3.up * character.JumpForce);
-            character.TriggerAnimation(jumpParam);
+            Jump();
         }
 
         public override void Exit()
@@ -93,6 +91,13 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         public override void PhysicsUpdate()
         {
             grounded = character.CheckCollisionOverlap(character.transform.position);
+        }
+
+        private void Jump()
+        {
+            character.transform.Translate(Vector3.up * (character.CollisionOverlapRadius + 0.1f));
+            character.ApplyImpulse(Vector3.up * character.JumpForce);
+            character.TriggerAnimation(jumpParam);
         }
     }
 }

@@ -38,7 +38,6 @@ namespace RayWenderlich.Unity.StatePatternInUnity
     {
         #region Variables
 
-        //1
         public StandingState standing;
         public DuckingState ducking;
         public JumpingState jumping;
@@ -78,6 +77,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         private int horizonalMoveParam = Animator.StringToHash("H_Speed");
         private int verticalMoveParam = Animator.StringToHash("V_Speed");
         private int shootParam = Animator.StringToHash("Shoot");
+        private int hardLanding = Animator.StringToHash("HardLand");
         #endregion
 
         #region Properties
@@ -190,8 +190,9 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             }
         }
 
-        public void PlayShockwaveFX()
+        public void DiveBomb()
         {
+            TriggerAnimation(hardLanding);
             SoundManager.Instance.PlaySound(SoundManager.Instance.hardLanding);
             shockWave.Play();
         }
@@ -233,7 +234,6 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 
         private void Start()
         {
-            //2
             standing = new StandingState(this);
             ducking = new DuckingState(this);
             jumping = new JumpingState(this);
@@ -241,7 +241,6 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             shooting = new ShootingState(this);
             melee = new MeleeState(this);
 
-            //3
             State.ChangeState(standing, movementStates);
             State.ChangeState(melee, equipmentStates);
         }

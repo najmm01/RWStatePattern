@@ -34,7 +34,6 @@ namespace RayWenderlich.Unity.StatePatternInUnity
 {
     public class DivingState : State
     {
-        //1
         private enum DiveSubState
         {
             InAir,
@@ -43,11 +42,8 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         }
 
         private float cooldownTimer;
-        //2
         private DiveSubState subState;
-        private int hardLanding = Animator.StringToHash("HardLand");
         
-        //3
         public DivingState(Character character) : base(character) { }
 
         public override void Enter()
@@ -74,8 +70,7 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             switch (subState)
             {
                 case DiveSubState.Grounded:
-                    character.TriggerAnimation(hardLanding);
-                    character.PlayShockwaveFX();
+                    character.DiveBomb();
                     subState = DiveSubState.CoolDown;
                     break;
                 case DiveSubState.CoolDown:

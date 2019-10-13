@@ -43,7 +43,8 @@ namespace RayWenderlich.Unity.StatePatternInUnity
         {
             DisplayOnUI(UIManager.Alignment.Right);
             SoundManager.Instance.PlaySound(SoundManager.Instance.shootableEquip);
-            shoot = changeWeapon = false;
+            shoot = false;
+            changeWeapon = false;
             character.Equip(character.ShootableWeapon);
         }
 

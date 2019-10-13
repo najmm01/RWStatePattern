@@ -44,7 +44,8 @@ namespace RayWenderlich.Unity.StatePatternInUnity
             base.Enter();
             speed = character.MovementSpeed;
             rotationSpeed = character.RotationSpeed;
-            crouch = jump = false;
+            crouch = false;
+            jump = false;
         }
 
         public override void Exit()
